@@ -35,4 +35,6 @@ jobs:
           python -m crc show --type sales
           python -m crc checklist --type sales | head -20
           python -m crc laws --key 民法典第585条
-          python -m crc audit --type sales --file examples/contract_sample.md
+          # audit 检出缺失条款时按设计返回 1（示例合同刻意留了缺口），此处只验证命令可运行
+          python -m crc audit --type sales --file examples/contract_sample.md || true
+          python -m crc audit --type sales --file examples/contract_sample.md --json | head -5
