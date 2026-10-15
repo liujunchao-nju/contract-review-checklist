@@ -1,0 +1,157 @@
+# 市场基准阈值库。
+#
+# 与 laws.yaml 的性质不同，必须分清：
+#   laws.yaml        法律规定。条号与原文一一对应，引用错误是硬错误。
+#   benchmarks.yaml  市场惯例与常见区间的参照值。不是法律规定，
+#                    只用于发现「明显离谱」的条款，不得当作谈判依据
+#                    或裁判标准写进对外文件。
+#
+# 同样的规则：benchmarks 里的每一处 basis 也必须以 key 的形式
+# 出现在 laws.yaml 中，否则 `crc verify` 与单元测试会报错。
+
+verified_on: "2026-10-15"
+note: >
+  区间取自中国内地民商事交易的常见做法与法律规定中的硬性上限，
+  用于快速定位偏离。凡标注 legal_limit 的，超出即触碰法律效力问题；
+  其余为惯例参照，偏离只提示复核，不意味着无效。
+
+benchmarks:
+  - id: penalty-ratio
+    name: 违约金比例
+    metric: 违约金占合同总额的比例
+    unit: percent
+    direction: high
+    anchors: [违约金]
+    thresholds: {caution: 30, danger: 50}
+    levels:
+      standard: 不超过 30%
+      caution: 30% 至 50%
+      danger: 超过 50%
+    note: 超过损失百分之三十的一般会被认定过分高于损失，对方可请求调减。
+    basis:
+      - 民法典第585条
+      - 合同编通则解释第65条
+
+  - id: warranty-period
+    name: 质量保证期
+    metric: 质保期长度
+    unit: months
+    direction: low
+    anchors: [质保期, 质量保证期, 保修期, 质保金]
+    thresholds: {caution: 12, danger: 6}
+    levels:
+      standard: 12 个月及以上
+      caution: 6 至 12 个月
+      danger: 不足 6 个月
+    note: 质保期过短会把验收后暴露的瑕疵风险转嫁给买方，应与标的物的合理使用寿命匹配。
+    basis:
+      - 民法典第615条
+      - 民法典第621条
+
+  - id: inspection-period
+    name: 检验与验收期
+    metric: 买受人检验并提出异议的期限
+    unit: days
+    direction: low
+    anchors: [验收期, 检验期, 验收期限, 检验期限]
+    thresholds: {caution: 7, danger: 3}
+    levels:
+      standard: 7 日及以上
+      caution: 3 至 7 日
+      danger: 不足 3 日
+    note: 怠于通知可能被视为数量质量符合约定，期限过短实质剥夺检验机会。
+    basis:
+      - 民法典第621条
+
+  - id: payment-term
+    name: 付款账期
+    metric: 交付或开票后付款的天数
+    unit: days
+    direction: high
+    anchors: [账期, 付款期限, 付款周期, 结算周期]
+    thresholds: {caution: 60, danger: 90}
+    levels:
+      standard: 60 日以内
+      caution: 60 至 90 日
+      danger: 超过 90 日
+    note: 账期越长，卖方的资金占用与坏账敞口越大，应与对方的资信状况匹配。
+    basis:
+      - 民法典第626条
+
+  - id: renewal-notice
+    name: 自动续约的提前通知期
+    metric: 不续约须提前通知的天数
+    unit: days
+    direction: low
+    anchors: [自动续约, 自动续期, 自动顺延, 续约通知]
+    thresholds: {caution: 30, danger: 15}
+    levels:
+      standard: 30 日及以上
+      caution: 15 至 30 日
+      danger: 不足 15 日
+    note: 自动续约若没有足够的退出提前期，属于加重对方负担的格式条款。
+    basis:
+      - 民法典第496条
+
+  - id: non-compete
+    name: 竞业限制期限
+    metric: 竞业限制的月数
+    unit: months
+    direction: high
+    legal_limit: true
+    anchors: [竞业限制]
+    thresholds: {caution: 24, danger: 24}
+    levels:
+      standard: 不超过 24 个月
+      caution: 接近 24 个月，须核对起算点
+      danger: 超过 24 个月，超出部分不受保护
+    note: 竞业限制期限不得超过二年，这是法律上限而非惯例区间。
+    basis:
+      - 劳动合同法第24条
+      - 劳动合同法第23条
+
+  - id: confidentiality-term
+    name: 保密期限
+    metric: 合同终止后继续保密的年数
+    unit: years
+    direction: low
+    anchors: [保密期限, 保密义务持续, 继续保密]
+    thresholds: {caution: 3, danger: 1}
+    levels:
+      standard: 3 年及以上
+      caution: 1 至 3 年
+      danger: 不足 1 年或未约定
+    note: 未约定合同终止后是否延续，是保密条款最常见的漏项。
+    basis:
+      - 民法典第509条
+
+  - id: lease-term
+    name: 租赁期限
+    metric: 租赁合同的年数
+    unit: years
+    direction: high
+    legal_limit: true
+    anchors: [租赁期限, 租赁期间, 租期]
+    thresholds: {caution: 20, danger: 20}
+    levels:
+      standard: 不超过 20 年
+      caution: 接近 20 年，须核对续订安排
+      danger: 超过 20 年，超过部分无效
+    note: 租赁期限不得超过二十年，超过部分无效，这是法律上限。
+    basis:
+      - 民法典第705条
+
+  - id: loan-rate
+    name: 借款年利率
+    metric: 年化利率
+    unit: percent
+    direction: high
+    anchors: [年利率, 借款利率, 借款利息, 年化利率]
+    thresholds: {caution: 15, danger: 24}
+    levels:
+      standard: 15% 以下
+      caution: 15% 至 24%
+      danger: 超过 24%
+    note: 借款利率不得违反国家有关规定，司法保护上限随 LPR 变动，签约前应核对当期标准。
+    basis:
+      - 民法典第680条

@@ -3,9 +3,10 @@
 规则写在 data/contracts/*.yaml，本模块只负责读取、校验与合并。
 新增一个合同类型不需要改代码，放一个 YAML 文件即可。
 
-校验包含两件事：
+校验包含三件事：
 1. 结构完整性（必填字段、checks 三层、clause 字段）
 2. 引用合法性（所有 basis 引用的法条 key 必须在 laws.yaml 白名单内）
+3. 基准库结构及其法条引用（benchmarks.yaml）
 """
 
 from __future__ import annotations
@@ -22,6 +23,9 @@ REQUIRED_TOP = ("type", "label")
 REQUIRED_CHECK = ("id", "question", "risk")
 DIMENSION_ORDER = ("macro", "meso", "micro")
 RISK_ORDER = ("fatal", "major", "minor", "note")
+
+# 立场：审查结论依附于「代表哪一方」，同一条款对甲方是优势、对乙方就是风险
+PARTIES = ("甲方", "乙方")
 
 
 class ContractError(ValueError):
@@ -64,6 +68,35 @@ def risk_labels() -> dict[str, str]:
     return {r["id"]: r["label"] for r in load_dimensions()["risk_levels"]}
 
 
+def _validate_party_fields(doc: dict, path: pathlib.Path) -> None:
+    """校验立场相关字段：键只能是甲方或乙方，风险等级只能是四级之一。"""
+    for dim in DIMENSION_ORDER:
+        for item in doc.get("checks", {}).get(dim) or []:
+            ident = item.get("id", "?")
+            notes = item.get("party_notes")
+            if notes is not None:
+                if not isinstance(notes, dict):
+                    raise ContractError(f"{path.name} 的 {ident} 的 party_notes 必须是映射")
+                unknown = [k for k in notes if k not in PARTIES]
+                if unknown:
+                    raise ContractError(
+                        f"{path.name} 的 {ident} 出现未知立场 {', '.join(map(str, unknown))}"
+                    )
+            by_party = item.get("risk_by_party")
+            if by_party is not None:
+                if not isinstance(by_party, dict):
+                    raise ContractError(
+                        f"{path.name} 的 {ident} 的 risk_by_party 必须是映射"
+                    )
+                for party, risk in by_party.items():
+                    if party not in PARTIES:
+                        raise ContractError(f"{path.name} 的 {ident} 出现未知立场 {party}")
+                    if risk not in RISK_ORDER:
+                        raise ContractError(
+                            f"{path.name} 的 {ident} 在 {party} 下出现未知风险等级 {risk}"
+                        )
+
+
 def _validate_contract(doc: dict, path: pathlib.Path, law_index: dict) -> None:
     missing = [k for k in REQUIRED_TOP if not doc.get(k)]
     if missing:
@@ -86,6 +119,7 @@ def _validate_contract(doc: dict, path: pathlib.Path, law_index: dict) -> None:
                 raise ContractError(
                     f"{path.name} 的 checks.{dim} 出现未知风险等级 {item['risk']}"
                 )
+    _validate_party_fields(doc, path)
 
     for clause in doc.get("clauses") or []:
         if not clause.get("name"):
@@ -120,6 +154,8 @@ def load_contract(name: str) -> dict:
 
 def validate_all() -> list[str]:
     """校验全部合同类型文件，返回类型名列表；不合法则抛错。"""
+    from .bench import validate_benchmarks
+
     law_index = load_laws()
     names: list[str] = []
     for path in sorted(CONTRACTS_DIR.glob("*.yaml")):
@@ -128,25 +164,46 @@ def validate_all() -> list[str]:
         names.append(doc["type"])
     if "common" not in names:
         raise ContractError("缺少 common.yaml（通用审查项）")
+    validate_benchmarks(law_index)
     return names
 
 
-def compose(name: str) -> dict:
-    """合成某个合同类型的完整清单：通用项在前，专属项在后。"""
+def _apply_party(item: dict, party: str | None) -> dict:
+    """按审查立场改写一条审查项：补立场提示，必要时调整风险等级。"""
+    if not party:
+        return dict(item)
+    out = dict(item)
+    note = (item.get("party_notes") or {}).get(party)
+    if note:
+        out["party_note"] = str(note).strip()
+    risk = (item.get("risk_by_party") or {}).get(party)
+    if risk:
+        out["risk"] = risk
+        out["risk_adjusted"] = risk != item.get("risk")
+    return out
+
+
+def compose(name: str, party: str | None = None) -> dict:
+    """合成某个合同类型的完整清单：通用项在前，专属项在后。
+
+    party 为「甲方」或「乙方」时，审查项会带上该立场的提示与风险等级。
+    """
+    if party and party not in PARTIES:
+        raise KeyError(f"未知的审查立场: {party}；可用: {'、'.join(PARTIES)}")
     common = load_contract("common")
-    if name == "common":
-        return _merge([common])
-    return _merge([common, load_contract(name)])
+    docs = [common] if name == "common" else [common, load_contract(name)]
+    return _merge(docs, party)
 
 
-def _merge(docs: list[dict]) -> dict:
+def _merge(docs: list[dict], party: str | None = None) -> dict:
     checks: dict[str, list] = {dim: [] for dim in DIMENSION_ORDER}
     clauses: list[dict] = []
     red_flags: list[dict] = []
     basis: list[str] = []
     for doc in docs:
         for dim in DIMENSION_ORDER:
-            checks[dim].extend(doc["checks"].get(dim) or [])
+            for item in doc["checks"].get(dim) or []:
+                checks[dim].append(_apply_party(item, party))
         clauses.extend(doc.get("clauses") or [])
         red_flags.extend(doc.get("red_flags") or [])
         basis.extend(doc.get("legal_basis") or [])
@@ -156,6 +213,7 @@ def _merge(docs: list[dict]) -> dict:
         "category": docs[-1].get("category", ""),
         "summary": docs[-1].get("summary", "").strip(),
         "sources": [d["type"] for d in docs],
+        "party": party or "",
         "checks": checks,
         "clauses": clauses,
         "red_flags": red_flags,

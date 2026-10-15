@@ -8,7 +8,10 @@ from __future__ import annotations
 
 import pathlib
 
+import pytest
+
 from crc.audit import audit, format_audit
+from crc.evidence import STATUS_HEADING, STATUS_MISSING
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SAMPLE = ROOT / "examples" / "contract_sample.md"
@@ -82,3 +85,72 @@ def test_format_audit_text():
     assert "合同类型：买卖合同" in text
     assert "必备条款未见" in text
     assert "风险信号" in text
+
+
+# ── 三级证据 ────────────────────────────────────────────────
+
+
+def test_details_cover_every_clause_with_status():
+    result = audit("sales", _sample_text())
+    assert len(result["details"]) == result["clause_total"]
+    for row in result["details"]:
+        assert row["status"] in ("标题", "正文", "缺失")
+        assert "line" in row and "matched" in row
+
+
+def test_heading_hit_is_marked_as_heading():
+    text = "第三条 争议解决\n双方发生争议应先协商。\n"
+    result = audit("sales", text)
+    row = next(r for r in result["details"] if r["name"] == "争议解决条款")
+    assert row["status"] == STATUS_HEADING
+
+
+def test_missing_clause_has_no_line():
+    result = audit("sales", _sample_text())
+    row = next(r for r in result["details"] if r["name"] == "保密条款")
+    assert row["status"] == STATUS_MISSING
+    assert row["line"] == 0
+
+
+def test_red_flag_reports_position():
+    result = audit("sales", _sample_text())
+    flag = next(f for f in result["red_flags"] if f["name"] == "最终解释权条款")
+    assert flag["line"] > 0
+    assert flag["excerpt"]
+
+
+# ── 基准区间 ────────────────────────────────────────────────
+
+
+def test_benchmarks_scanned_by_default():
+    result = audit("sales", _sample_text())
+    ids = {row["id"] for row in result["benchmarks"]}
+    assert "penalty-ratio" in ids, "示例合同中的高额违约金应被基准扫描检出"
+
+
+def test_benchmarks_can_be_disabled():
+    result = audit("sales", _sample_text(), benchmarks=False)
+    assert result["benchmarks"] == []
+
+
+# ── 立场 ────────────────────────────────────────────────────
+
+
+def test_party_written_into_result():
+    result = audit("sales", _sample_text(), party="乙方")
+    assert result["party"] == "乙方"
+
+
+def test_neutral_result_has_empty_party():
+    assert audit("sales", _sample_text())["party"] == ""
+
+
+def test_unknown_party_rejected():
+    with pytest.raises(KeyError):
+        audit("sales", _sample_text(), party="丙方")
+
+
+def test_format_audit_shows_stance():
+    text = format_audit(audit("sales", _sample_text(), party="甲方"))
+    assert "审查立场：甲方" in text
+    assert "量化条款与基准区间比对" in text
