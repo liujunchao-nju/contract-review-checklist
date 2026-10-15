@@ -1,0 +1,126 @@
+type: lease
+label: 租赁合同
+category: 物权类
+summary: 出租人交付租赁物供承租人使用收益，承租人支付租金。
+
+legal_basis:
+  - 民法典第703条
+  - 民法典第704条
+  - 民法典第705条
+  - 民法典第707条
+
+checks:
+  macro:
+    - id: lease-ownership
+      question: 出租人是否有权出租？租赁物是否存在权属争议或已被查封？
+      risk: fatal
+      guidance: 出租他人之物会影响履行与占有，须核查权属或转租授权链条。
+      basis:
+        - 民法典第703条
+
+    - id: lease-term-limit
+      question: 租赁期限是否超过二十年？续订是否重新计算？
+      risk: fatal
+      guidance: 超过二十年的部分无效，续订期限自续订之日起仍不得超过二十年。
+      basis:
+        - 民法典第705条
+
+  meso:
+    - id: lease-written
+      question: 租赁期限是否在六个月以上？是否采用了书面形式？
+      risk: major
+      guidance: 六个月以上未采用书面形式且无法确定期限的，视为不定期租赁，任何一方可随时解除。
+      basis:
+        - 民法典第707条
+
+    - id: lease-sublet
+      question: 是否允许转租？转租是否需要出租人书面同意？
+      risk: major
+      guidance: 未经同意转租，出租人可以解除合同；应明确同意的方式与范围。
+      basis:
+        - 民法典第716条
+
+  micro:
+    - id: lease-rent
+      question: 租金数额、支付周期与逾期后果是否明确？
+      risk: major
+      guidance: 支付期限约定不明时按法定规则确定，未必符合出租人的现金流安排，宜直接写明。
+      basis:
+        - 民法典第721条
+
+    - id: lease-ownership-change
+      question: 租赁期内租赁物所有权变动的处理是否写明？
+      risk: minor
+      guidance: 占有期限内所有权变动不影响租赁合同效力，买方须继受租赁关系，应在合同中相互提示。
+      basis:
+        - 民法典第725条
+
+clauses:
+  - name: 租赁物条款
+    required: true
+    keywords: [租赁物, 房屋地址, 房屋坐落, 面积, 场地]
+    elements:
+      - 名称与坐落位置
+      - 面积或数量
+      - 配套设施与现状
+      - 权属证明编号
+    issues:
+      - 地址不具体或面积不准确
+      - 未描述交付时的现状
+    basis:
+      - 民法典第704条
+
+  - name: 租赁期限条款
+    required: true
+    keywords: [租赁期限, 租期, 起租日, 租赁起止]
+    elements:
+      - 起止日期
+      - 免租期或装修期
+      - 续租的条件与通知期
+      - 期限上限的合法性
+    issues:
+      - 只有起租日没有终止日
+      - 期满续租未约定通知期
+    basis:
+      - 民法典第705条
+      - 民法典第707条
+
+  - name: 租金与押金条款
+    required: true
+    keywords: [租金, 押金, 保证金, 租金支付]
+    elements:
+      - 租金标准与支付周期
+      - 押金数额与退还条件
+      - 逾期付款的违约责任
+      - 租金调整机制
+    issues:
+      - 押金退还条件不明确
+      - 未约定租金调整触发条件
+    basis:
+      - 民法典第721条
+
+  - name: 维修与装修条款
+    required: true
+    keywords: [维修, 装修, 添附, 装饰装修]
+    elements:
+      - 维修义务的划分
+      - 装修的审批与范围
+      - 合同终止后装修物的处理
+      - 大修期间的租金处理
+    issues:
+      - 维修义务全部推给一方
+      - 未约定装修物归属
+    basis:
+      - 民法典第704条
+
+  - name: 转租与转让条款
+    required: false
+    keywords: [转租, 转让, 分租, 共同使用]
+    elements:
+      - 是否允许转租
+      - 转租的审批程序
+      - 违反转租约定的后果
+    issues:
+      - 未约定是否允许转租
+    basis:
+      - 民法典第716条

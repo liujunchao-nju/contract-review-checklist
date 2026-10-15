@@ -1,0 +1,116 @@
+type: service
+label: 承揽与服务合同
+category: 服务类
+summary: 一方按要求完成工作并交付成果，另一方支付报酬。
+
+legal_basis:
+  - 民法典第770条
+
+checks:
+  macro:
+    - id: service-nature
+      question: 双方是承揽、委托还是其他关系？定性是否与约定的权利义务相符？
+      risk: major
+      guidance: 承揽以交付工作成果为核心，委托以处理事务为核心，二者在解除权、转委托、责任承担上差别很大，先定性再谈条款。
+      basis:
+        - 民法典第770条
+        - 合同编通则解释第15条
+
+  meso:
+    - id: service-scope
+      question: 服务范围与排除事项是否写明？
+      risk: fatal
+      guidance: 范围不清会把「有没有做」变成无解的争论，宜用清单或附件固化工作内容与交付物。
+      basis:
+        - 民法典第770条
+
+  micro:
+    - id: service-delivery
+      question: 成果交付标准与验收方式是否可衡量？
+      risk: major
+      guidance: 成果验收应有客观标准，能改造成量化指标的尽量量化，减少主观判断空间。
+      basis:
+        - 民法典第770条
+
+    - id: service-cooperation
+      question: 委托方的协助、配合义务与期限是否写明？
+      risk: minor
+      guidance: 履行合同应遵循诚信原则履行通知、协助等义务，宜把配合事项与时限写实。
+      basis:
+        - 民法典第509条
+
+    - id: service-payment
+      question: 报酬与付款节点是否与交付进度挂钩？
+      risk: major
+      guidance: 有偿合同在无特别规定时参照买卖合同的规则处理，付款节点与验收节点对应可降低履约风险。
+      basis:
+        - 民法典第646条
+
+clauses:
+  - name: 服务内容与范围条款
+    required: true
+    keywords: [服务内容, 服务范围, 工作内容, 委托事项]
+    elements:
+      - 服务事项清单
+      - 明确排除的事项
+      - 交付物清单
+      - 变更范围的程序
+    issues:
+      - 范围表述含「等」字兜底
+      - 未列出交付物
+    basis:
+      - 民法典第770条
+
+  - name: 交付与验收条款
+    required: true
+    keywords: [交付, 验收, 成果交付, 交付物]
+    elements:
+      - 交付形式与媒介
+      - 验收标准与期限
+      - 修改次数与返工约定
+      - 视为验收合格的条件
+    issues:
+      - 验收标准主观化
+      - 未约定返工费用承担
+    basis:
+      - 民法典第770条
+
+  - name: 报酬与支付条款
+    required: true
+    keywords: [报酬, 服务费, 合同价款, 付款]
+    elements:
+      - 报酬总额与构成
+      - 分期付款节点
+      - 发票与税费
+      - 额外工作的计价方式
+    issues:
+      - 付款节点与交付脱钩
+      - 未约定范围外工作的计价
+    basis:
+      - 民法典第646条
+
+  - name: 知识产权归属条款
+    required: true
+    keywords: [知识产权, 成果归属, 著作权, 专利权]
+    elements:
+      - 背景知识产权与前景知识产权的区分
+      - 成果归属
+      - 授权范围与期限
+      - 第三方素材的合规保证
+    issues:
+      - 未区分背景与前景成果
+      - 授权范围过宽
+    basis:
+      - 民法典第859条
+
+  - name: 人员与转委托条款
+    required: false
+    keywords: [人员, 转委托, 分包, 项目组]
+    elements:
+      - 关键人员名单
+      - 人员变更的通知义务
+      - 是否允许转委托及条件
+    issues:
+      - 未约定关键人员变更
+    basis:
+      - 民法典第770条

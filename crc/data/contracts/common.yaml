@@ -1,0 +1,254 @@
+type: common
+label: 通用审查项
+category: 基础
+summary: 不分合同类型都适用的主体、效力、条款完备性与风险信号检查。
+
+legal_basis:
+  - 民法典第143条
+  - 民法典第153条
+  - 民法典第470条
+  - 民法典第496条
+  - 民法典第502条
+
+checks:
+  macro:
+    - id: common-subject
+      question: 对方主体是否存在、是否适格？营业执照、名称与签约主体是否一致？
+      risk: fatal
+      guidance: 主体不存在或名称不一致，合同可能无法约束预期相对人，先查登记信息再谈条款。
+      basis:
+        - 民法典第143条
+
+    - id: common-authority
+      question: 签约人有无代表权或代理权？是否已尽到合理审查义务？
+      risk: fatal
+      guidance: 法定代表人越权签约的效力取决于相对人是否善意；应核验授权文件、决议与印章来源。
+      basis:
+        - 合同编通则解释第20条
+
+    - id: common-nature
+      question: 合同名称与约定的权利义务是否一致？会不会被认定为名实不符？
+      risk: major
+      guidance: 裁判按合同内容而非名称认定关系，名为合作实为借贷一类的安排会被重新定性。
+      basis:
+        - 合同编通则解释第15条
+
+    - id: common-legality
+      question: 标的是否合法、可否流转？交易结构是否触碰强制性规定或公序良俗？
+      risk: fatal
+      guidance: 违反效力性强制性规定的合同无效，且不因双方约定而改变。
+      basis:
+        - 民法典第153条
+
+    - id: common-approval
+      question: 本次交易是否属于依法应当办理批准、登记、备案的情形？
+      risk: major
+      guidance: 需批准的合同在批准前未生效，报批义务条款本身独立有效，应明确由谁在何时报批。
+      basis:
+        - 民法典第502条
+
+  meso:
+    - id: common-formation
+      question: 合同成立与生效条件是否写明？是否附条件、附期限？
+      risk: minor
+      guidance: 依法成立的合同自成立时生效，除法律另有规定或当事人另有约定。
+      basis:
+        - 民法典第465条
+        - 民法典第502条
+
+    - id: common-boilerplate
+      question: 若使用格式条款，提供方是否履行了提示与说明义务？
+      risk: major
+      guidance: 未履行提示说明义务，对方可主张该条款不成为合同内容；加粗、单独确认、回执都是可用的证明手段。
+      basis:
+        - 民法典第496条
+        - 合同编通则解释第9条
+
+    - id: common-completeness
+      question: 民法典第四百七十条列举的一般条款是否齐备？
+      risk: major
+      guidance: 当事人、标的、数量、质量、价款、履行期限地点方式、违约责任、争议解决，缺一项就要评估能否依补充规则确定。
+      basis:
+        - 民法典第470条
+
+    - id: common-multiple
+      question: 同一交易是否存在多份文本？各文本之间的关系是否写明？
+      risk: major
+      guidance: 同一交易订立多份合同的，以虚假意思表示订立的一份无效；真实的多份则按成立顺序与实际履行认定是否变更。
+      basis:
+        - 合同编通则解释第14条
+
+  micro:
+    - id: common-penalty
+      question: 违约金比例是否可执行？是否明显超出可预见损失？
+      risk: major
+      guidance: 超过损失百分之三十的一般会被认定为过分高于损失而调减；区分迟延履行违约金与解约违约金。
+      basis:
+        - 民法典第585条
+        - 合同编通则解释第65条
+
+    - id: common-penalty-burden
+      question: 违约金条款是否留有举证与调整的空间，而非约定「不得调整」？
+      risk: minor
+      guidance: 约定不得调整违约金的不予支持；主张调减的违约方负举证责任，非违约方主张合理的也须举证。
+      basis:
+        - 合同编通则解释第64条
+
+    - id: common-damages
+      question: 损失赔偿范围是否限定在可预见范围内？是否排除间接损失？
+      risk: major
+      guidance: 赔偿额相当于违约造成的损失，包括可得利益，但不超过违约方订立时可预见的范围。
+      basis:
+        - 民法典第584条
+
+    - id: common-force-majeure
+      question: 不可抗力的定义、通知义务与证明期限是否写明？
+      risk: minor
+      guidance: 不可抗力部分或全部免责，但须及时通知并在合理期限内提供证明；迟延履行后发生的不免责。
+      basis:
+        - 民法典第590条
+
+    - id: common-changed
+      question: 长期合同是否预留情势变更的重新协商机制？
+      risk: minor
+      guidance: 基础条件发生不可预见、非商业风险的重大变化时可请求重新协商乃至变更解除；事先约定排除该条适用无效。
+      basis:
+        - 民法典第533条
+        - 合同编通则解释第32条
+
+    - id: common-termination
+      question: 解除条件是否与法定解除情形衔接？解除权的行使程序是否明确？
+      risk: major
+      guidance: 约定解除不必与法定解除一致，但应明确通知方式与解除后果；法定解除的五种情形是兜底。
+      basis:
+        - 民法典第563条
+
+    - id: common-remedy
+      question: 违约救济手段是否完整（继续履行、补救、赔偿）？是否与违约金重复计算？
+      risk: minor
+      guidance: 约定违约金与继续履行可以并存，但就同一损失不得重复受偿。
+      basis:
+        - 民法典第577条
+
+clauses:
+  - name: 争议解决条款
+    required: true
+    keywords: [争议解决, 争议的解决, 管辖, 仲裁, 诉讼, 有管辖权的法院]
+    elements:
+      - 协商优先的期限
+      - 诉讼或仲裁二选一，不得约定不明
+      - 仲裁机构名称准确唯一
+      - 协议管辖法院须与争议有实际联系，且不违反级别管辖与专属管辖
+    issues:
+      - 约定「既可诉讼又可仲裁」
+      - 管辖法院约定不明或指向不存在的法院
+    basis:
+      - 民法典第470条
+
+  - name: 保密条款
+    required: true
+    keywords: [保密, 商业秘密, 保密义务, 保密信息]
+    elements:
+      - 保密信息的范围
+      - 保密期限（含合同终止后）
+      - 例外情形（已公开、法定披露）
+      - 违反保密义务的责任
+    issues:
+      - 保密范围过宽或过窄
+      - 未约定合同终止后是否继续保密
+    basis:
+      - 民法典第509条
+
+  - name: 不可抗力条款
+    required: true
+    keywords: [不可抗力, 情势变更, 无法预见]
+    elements:
+      - 不可抗力的定义或列举
+      - 通知义务与期限
+      - 证明材料的提供
+      - 免责范围与合同处理
+    issues:
+      - 把商业风险也列入不可抗力
+      - 通知期限约定得过短
+    basis:
+      - 民法典第590条
+
+  - name: 通知与送达条款
+    required: true
+    keywords: [通知, 送达, 联系方式, 通讯地址, 电子邮箱]
+    elements:
+      - 双方送达地址与联系人
+      - 送达方式及生效时间
+      - 地址变更的通知义务
+      - 约定送达地址可否适用于诉讼阶段
+    issues:
+      - 仅有甲方地址
+      - 未约定地址变更后如何送达
+    basis:
+      - 民法典第470条
+
+  - name: 合同生效、变更与解除条款
+    required: true
+    keywords: [合同生效, 生效条件, 合同变更, 合同解除, 补充协议]
+    elements:
+      - 生效条件（签字、盖章、批准）
+      - 变更须书面并经双方签署
+      - 解除的条件与程序
+      - 份数与效力顺序
+    issues:
+      - 未写明生效是否需盖章
+      - 允许一方单方变更
+    basis:
+      - 民法典第502条
+      - 民法典第563条
+
+red_flags:
+  - id: final-interpretation
+    name: 最终解释权条款
+    patterns: [最终解释权, 最终解释, 解释权归]
+    risk: major
+    message: 由一方单方保留解释权，属于加重对方责任、排除对方主要权利的格式条款，可能不成为合同内容。
+    basis:
+      - 民法典第496条
+
+  - id: blanket-disclaimer
+    name: 概不负责的全面免责
+    patterns: [概不负责, 概不承担, 不承担任何责任, 免除全部责任]
+    risk: fatal
+    message: 全面免除自身责任的表述，若属格式条款且未合理提示，对方法定责任无从追究，条款效力存疑。
+    basis:
+      - 民法典第496条
+      - 民法典第153条
+
+  - id: unilateral-change
+    name: 单方变更条款
+    patterns: [单方变更, 有权单方面修改, 自行调整, 无需另行通知]
+    risk: major
+    message: 允许一方不经协商单方变更合同内容，动摇合同的对价基础，应改为协商一致并设置通知期。
+    basis:
+      - 民法典第496条
+
+  - id: waiver-of-remedy
+    name: 放弃救济权利的表述
+    patterns: [放弃诉讼, 放弃仲裁, 不得提起诉讼, 放弃抗辩]
+    risk: fatal
+    message: 约定放弃诉权、仲裁权或抗辩权，排除对方的司法救济途径，通常不产生效力。
+    basis:
+      - 民法典第153条
+
+  - id: penalty-too-high
+    name: 违约金畸高
+    patterns: [按合同总额的百分之五十, 合同总额的百分之五十, 百分之五十的违约金]
+    risk: major
+    message: 明显超出可预见损失的违约金，对方可请求调减，超过损失百分之三十的一般会被认定过高。
+    basis:
+      - 民法典第585条
+      - 合同编通则解释第65条
+
+  - id: auto-renewal
+    name: 自动续约且无退出机制
+    patterns: [自动续约, 自动续期, 自动顺延]
+    risk: minor
+    message: 自动续约条款应同时约定不续约的通知方式与提前期，否则可能被认定为加重对方负担。
+    basis:
+      - 民法典第496条

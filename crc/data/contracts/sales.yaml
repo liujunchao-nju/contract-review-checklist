@@ -1,0 +1,126 @@
+type: sales
+label: 买卖合同
+category: 物权类
+summary: 一方转移标的物所有权，另一方支付价款。
+
+legal_basis:
+  - 民法典第595条
+  - 民法典第596条
+
+checks:
+  macro:
+    - id: sales-disposal
+      question: 出卖人是否为标的物的所有权人或已获合法处分授权？
+      risk: fatal
+      guidance: 无权处分不当然导致合同无效，但会阻断履行，须核查权属凭证或授权链条。
+      basis:
+        - 民法典第595条
+
+  meso:
+    - id: sales-risk-point
+      question: 标的物毁损灭失的风险自何时起转移？是否与交付节点一致？
+      risk: major
+      guidance: 风险原则上随交付转移，另有约定从约定；风险转移点与所有权转移点可以分离，两者都要写明。
+      basis:
+        - 民法典第604条
+
+  micro:
+    - id: sales-quality
+      question: 质量标准是否明确到可检验？是国标、行标、企标还是封样？
+      risk: major
+      guidance: 质量要求不明确会同时抬高验收争议与举证成本，宜写明标准编号并约定替代顺序。
+      basis:
+        - 民法典第615条
+
+    - id: sales-inspection
+      question: 是否约定了检验期限与通知方式？逾期通知的后果是否提示到位？
+      risk: major
+      guidance: 怠于通知可能被视为数量质量符合约定；未约定检验期限时，二年是最长保护期，有质量保证期的从其约定。
+      basis:
+        - 民法典第621条
+
+    - id: sales-payment
+      question: 价款数额、支付方式与时间是否明确？是否含税、含运费？
+      risk: major
+      guidance: 数额与支付方式约定不明时适用补充规则，结果未必符合预期，宜直接写明。
+      basis:
+        - 民法典第626条
+
+clauses:
+  - name: 标的条款
+    required: true
+    keywords: [标的物, 货物名称, 产品名称, 标的名称, 规格型号]
+    elements:
+      - 名称与规格型号
+      - 数量与计量单位
+      - 质量标准或封样
+      - 是否允许溢短装及比例
+    issues:
+      - 描述笼统，未写规格型号
+      - 数量没有计量单位
+    basis:
+      - 民法典第596条
+
+  - name: 价款与结算条款
+    required: true
+    keywords: [价款, 合同总价, 货款, 结算方式, 含税]
+    elements:
+      - 单价与总价
+      - 是否含税及发票类型
+      - 结算方式与付款节点
+      - 币种与汇率风险
+    issues:
+      - 只写总价未写单价
+      - 未写明是否含税
+    basis:
+      - 民法典第626条
+
+  - name: 交付与验收条款
+    required: true
+    keywords: [交付, 交货, 交货期, 验收]
+    elements:
+      - 交付时间与地点
+      - 运输方式与运费承担
+      - 验收标准、期限与程序
+      - 验收不合格的处理
+    issues:
+      - 验收期限过短或未约定
+      - 未约定验收不合格后的补救路径
+    basis:
+      - 民法典第596条
+      - 民法典第621条
+
+  - name: 所有权与风险转移条款
+    required: true
+    keywords: [所有权转移, 风险转移, 风险由, 所有权保留]
+    elements:
+      - 所有权转移时点
+      - 风险转移时点
+      - 是否保留所有权
+      - 保险的投保与受益人
+    issues:
+      - 未区分所有权转移与风险转移
+      - 约定保留所有权但未办登记
+    basis:
+      - 民法典第604条
+
+  - name: 质量保证与售后条款
+    required: false
+    keywords: [质量保证, 质保期, 三包, 售后服务]
+    elements:
+      - 质保期起算点与长度
+      - 质保范围与除外情形
+      - 维修或更换的响应时限
+    issues:
+      - 质保期起算点不明确
+    basis:
+      - 民法典第615条
+
+red_flags:
+  - id: sales-inspection-too-short
+    name: 验收期短至无法完成检验
+    patterns: [验收期为三日, 验收期为3日, 逾期视为验收合格]
+    risk: major
+    message: 验收期过短或约定逾期即视为合格，会把标的物瑕疵风险不当转嫁给买方，须与检验实际所需时间匹配。
+    basis:
+      - 民法典第621条

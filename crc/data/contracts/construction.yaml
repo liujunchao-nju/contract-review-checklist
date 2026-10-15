@@ -1,0 +1,127 @@
+type: construction
+label: 建设工程合同
+category: 建设工程
+summary: 承包人进行工程建设，发包人支付价款。
+
+legal_basis:
+  - 民法典第788条
+  - 民法典第791条
+  - 民法典第807条
+
+checks:
+  macro:
+    - id: construction-subcontract
+      question: 是否存在转包或违法分包？分包单位是否具备相应资质？
+      risk: fatal
+      guidance: 禁止将全部工程转包，禁止分包给不具备资质的单位，禁止分包单位再分包，主体结构施工必须由承包人自行完成，违反的合同可能无效。
+      basis:
+        - 民法典第791条
+
+  meso:
+    - id: construction-form
+      question: 是否采用书面形式？招标程序是否合法？
+      risk: major
+      guidance: 建设工程合同应当采用书面形式，依法必须招标的项目未招标会影响合同效力，需核对招投标资料。
+      basis:
+        - 民法典第789条
+        - 民法典第788条
+
+    - id: construction-scope
+      question: 工程范围、工期与价款是否明确？变更与签证程序是否约定？
+      risk: major
+      guidance: 建设工程争议多源于变更与签证失控，应约定变更指令的书面形式、计价规则与确认时限。
+      basis:
+        - 民法典第788条
+
+  micro:
+    - id: construction-priority
+      question: 承包人是否了解并约定了工程价款优先受偿权的行使安排？
+      risk: major
+      guidance: 发包人逾期不付款的，承包人可催告、协议折价或申请拍卖，并就价款优先受偿，行使期限应提示到位。
+      basis:
+        - 民法典第807条
+
+    - id: construction-warranty
+      question: 质量保修范围、期限与质量保证金安排是否写明？
+      risk: major
+      guidance: 质量保证金比例与返还节点应明确，保修义务范围须与法定最低保修期限衔接。
+      basis:
+        - 民法典第788条
+
+    - id: construction-safety
+      question: 安全生产与用工责任如何划分？
+      risk: major
+      guidance: 承包人对施工现场安全生产负责，用工主体与工伤责任应与分包安排对应，避免责任真空。
+      basis:
+        - 民法典第791条
+
+clauses:
+  - name: 工程范围与工期条款
+    required: true
+    keywords: [工程范围, 工期, 开工, 竣工, 施工内容]
+    elements:
+      - 工程内容与范围
+      - 开工与竣工日期
+      - 工期顺延的条件与确认
+      - 进度计划的报批
+    issues:
+      - 工期顺延条件不清
+      - 缺少进度计划与节点
+    basis:
+      - 民法典第788条
+
+  - name: 工程质量与验收条款
+    required: true
+    keywords: [工程质量, 验收, 隐蔽工程, 竣工验收]
+    elements:
+      - 质量标准与依据
+      - 隐蔽工程的验收程序
+      - 竣工验收的组织与期限
+      - 不合格的返工与责任
+    issues:
+      - 隐蔽工程未约定验收留痕
+      - 验收期限不明确
+    basis:
+      - 民法典第788条
+
+  - name: 工程价款与支付条款
+    required: true
+    keywords: [工程价款, 进度款, 预付款, 结算, 工程款]
+    elements:
+      - 计价方式（固定总价、单价、成本加酬金）
+      - 预付款与进度款节点
+      - 结算资料的提交与审核期限
+      - 逾期付款的责任
+    issues:
+      - 结算审核期限缺失
+      - 进度款条件与工程量确认脱钩
+    basis:
+      - 民法典第807条
+
+  - name: 分包与转包条款
+    required: true
+    keywords: [分包, 转包, 专业分包, 劳务分包, 资质]
+    elements:
+      - 允许分包的范围与条件
+      - 分包单位的资质要求
+      - 发包人的同意程序
+      - 违反约定分包的后果
+    issues:
+      - 未约定分包审批程序
+      - 允许再分包
+    basis:
+      - 民法典第791条
+
+  - name: 质量保修条款
+    required: true
+    keywords: [质量保修, 保修期, 质量保证金, 质保金]
+    elements:
+      - 保修范围与期限
+      - 质量保证金的预留比例
+      - 保证金的返还节点与条件
+      - 保修期内的响应时限
+    issues:
+      - 保证金返还条件不明
+      - 保修期限低于法定要求
+    basis:
+      - 民法典第788条

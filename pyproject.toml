@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "contract-review-checklist"
+version = "0.1.0"
+description = "中文合同审查清单：三观四步框架、条款标准与法条核验"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "刘俊超", email = "251820244@smail.nju.edu.cn" }]
+keywords = ["合同审查", "contract review", "checklist", "三观四步法", "民法典", "legal", "中国法"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Text Processing :: Markup",
+    "Intended Audience :: Legal Industry",
+]
+dependencies = ["PyYAML>=6.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.urls]
+Homepage = "https://github.com/liujunchao-nju/contract-review-checklist"
+Issues = "https://github.com/liujunchao-nju/contract-review-checklist/issues"
+
+[project.scripts]
+crc = "crc.cli:main"
+
+[tool.setuptools]
+packages = ["crc"]
+
+[tool.setuptools.package-data]
+crc = ["data/*.yaml", "data/**/*.yaml"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

@@ -1,0 +1,141 @@
+type: labor
+label: 劳动合同
+category: 劳动类
+summary: 用人单位与劳动者确立劳动关系，明确双方权利义务。
+
+legal_basis:
+  - 劳动合同法第10条
+  - 劳动合同法第17条
+  - 劳动合同法第19条
+  - 劳动合同法第23条
+  - 劳动合同法第24条
+
+checks:
+  macro:
+    - id: labor-relationship
+      question: 双方是劳动关系还是劳务、合作、承揽关系？名实是否相符？
+      risk: fatal
+      guidance: 以实际用工管理关系定性，名为劳务实为劳动的，用人单位仍要承担用工责任。
+      basis:
+        - 合同编通则解释第15条
+
+  meso:
+    - id: labor-written
+      question: 是否订立书面劳动合同？签署时间是否符合要求？
+      risk: fatal
+      guidance: 建立劳动关系应当订立书面劳动合同，已用工未同时订立的应自用工之日起一个月内订立，逾期面临双倍工资风险。
+      basis:
+        - 劳动合同法第10条
+
+    - id: labor-probation
+      question: 试用期期限是否与合同期限匹配？是否重复约定试用期？
+      risk: fatal
+      guidance: 三个月以上不满一年不超过一个月，一年以上不满三年不超过二个月，三年以上及无固定期限不超过六个月；同一单位同一劳动者只能约定一次。
+      basis:
+        - 劳动合同法第19条
+
+  micro:
+    - id: labor-noncompete
+      question: 竞业限制的人员范围、期限与补偿是否合法？
+      risk: major
+      guidance: 竞业限制期限不得超过二年；须在解除或终止后按月给予经济补偿，未约定补偿会削弱条款的可执行性。
+      basis:
+        - 劳动合同法第23条
+        - 劳动合同法第24条
+
+    - id: labor-confidentiality
+      question: 保密范围是否明确？保密与竞业限制是否区分？
+      risk: minor
+      guidance: 保密义务不以支付补偿为前提，竞业限制则需要补偿，两者不宜混写在同一句。
+      basis:
+        - 劳动合同法第23条
+
+clauses:
+  - name: 工作内容与地点条款
+    required: true
+    keywords: [工作内容, 工作岗位, 职务, 工作地点]
+    elements:
+      - 岗位名称与职责
+      - 工作地点
+      - 岗位调整的条件
+      - 汇报关系
+    issues:
+      - 岗位职责空白
+      - 允许单位随意调岗
+    basis:
+      - 劳动合同法第17条
+
+  - name: 劳动报酬条款
+    required: true
+    keywords: [劳动报酬, 工资, 月薪, 薪资]
+    elements:
+      - 工资标准与构成
+      - 支付周期与日期
+      - 加班工资计算基数
+      - 绩效与奖金规则
+    issues:
+      - 未约定加班费基数
+      - 绩效规则另行制定且不告知
+    basis:
+      - 劳动合同法第17条
+
+  - name: 试用期条款
+    required: true
+    keywords: [试用期, 试用]
+    elements:
+      - 试用期长度与合同期限的匹配
+      - 试用期工资标准
+      - 转正条件与考核
+      - 不重复约定试用期
+    issues:
+      - 试用期超过法定上限
+      - 试用期工资低于法定下限
+    basis:
+      - 劳动合同法第19条
+
+  - name: 保密与竞业限制条款
+    required: false
+    keywords: [保密, 竞业限制, 商业秘密, 经济补偿]
+    elements:
+      - 保密信息范围
+      - 竞业限制人员范围
+      - 竞业限制期限（不超过二年）
+      - 经济补偿的标准与支付方式
+      - 违约责任的约定
+    issues:
+      - 竞业限制期限超过二年
+      - 约定竞业限制但不给补偿
+    basis:
+      - 劳动合同法第23条
+      - 劳动合同法第24条
+
+  - name: 社会保险条款
+    required: true
+    keywords: [社会保险, 社保, 五险一金, 公积金]
+    elements:
+      - 参保险种
+      - 缴费基数与比例
+      - 由单位代扣代缴
+      - 补充保险或商业保险
+    issues:
+      - 约定员工自愿放弃社保
+      - 以补贴代替参保
+    basis:
+      - 劳动合同法第17条
+
+red_flags:
+  - id: labor-waive-social-insurance
+    name: 约定放弃社会保险
+    patterns: [自愿放弃社保, 自愿放弃社会保险, 社保补贴代替, 放弃缴纳社保]
+    risk: fatal
+    message: 社会保险属劳动合同的必备条款，约定由劳动者放弃或以其书面承诺替代参保，对用人单位不产生免责效果，仍须补缴并承担相应责任。
+    basis:
+      - 劳动合同法第17条
+
+  - id: labor-noncompete-no-pay
+    name: 竞业限制未约定补偿
+    patterns: [竞业限制但不支付补偿, 无需支付经济补偿]
+    risk: major
+    message: 竞业限制须在解除或终止后按月给予经济补偿，否则劳动者可主张不履行竞业限制义务。
+    basis:
+      - 劳动合同法第23条

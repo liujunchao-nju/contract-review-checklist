@@ -1,0 +1,126 @@
+type: equity
+label: 股权转让合同
+category: 公司类
+summary: 有限责任公司股东将其股权转让给受让方并收取对价。
+
+legal_basis:
+  - 公司法第47条
+  - 公司法第84条
+
+checks:
+  macro:
+    - id: equity-disposal
+      question: 转让方是否为登记股东？股权是否存在质押、冻结或代持？
+      risk: fatal
+      guidance: 权属瑕疵会导致无法办理变更登记，签约前应查工商登记、章程与股权质押情况。
+      basis:
+        - 公司法第84条
+
+    - id: equity-preemption
+      question: 是否已就其他股东的优先购买权作出安排？通知与答复期是否符合规定？
+      risk: fatal
+      guidance: 向股东以外的人转让须书面通知其他股东，其他股东在同等条件下有优先购买权，自接到通知起三十日内未答复视为放弃。
+      basis:
+        - 公司法第84条
+
+    - id: equity-capital
+      question: 标的股权的出资是否已实缴？认缴期限是否已届至？
+      risk: major
+      guidance: 有限责任公司全体股东认缴的出资额应自公司成立之日起五年内缴足，未届期股权转让的出资责任承担须在合同中写明。
+      basis:
+        - 公司法第47条
+
+  meso:
+    - id: equity-charter
+      question: 公司章程对股权转让是否有特别限制？
+      risk: major
+      guidance: 章程对股权转让另有规定的从其规定，签约前应调取现行有效章程核对。
+      basis:
+        - 公司法第84条
+
+  micro:
+    - id: equity-transition
+      question: 过渡期的损益归属与交割安排是否写明？
+      risk: major
+      guidance: 评估基准日到交割日之间的经营损益、债务变化应有归属约定，否则极易在交割后争议。
+      basis:
+        - 公司法第84条
+
+    - id: equity-repr
+      question: 转让方的陈述与保证是否覆盖债务、诉讼、担保等或有负债？
+      risk: major
+      guidance: 股权的价值取决于公司资产负债状况，陈述保证与赔偿条款是受让方的核心保护手段。
+      basis:
+        - 公司法第84条
+
+clauses:
+  - name: 标的股权条款
+    required: true
+    keywords: [标的股权, 股权, 出资额, 认缴, 实缴, 持股比例]
+    elements:
+      - 标的公司名称与统一社会信用代码
+      - 转让比例与对应出资额
+      - 认缴与实缴状态
+      - 是否存在权利负担
+    issues:
+      - 未写明实缴状态
+      - 未披露股权质押
+    basis:
+      - 公司法第84条
+      - 公司法第47条
+
+  - name: 转让价款与支付条款
+    required: true
+    keywords: [转让价款, 转让价格, 股权转让款, 支付方式]
+    elements:
+      - 作价依据与评估
+      - 支付节点与条件
+      - 保证金与尾款安排
+      - 税费承担
+    issues:
+      - 付款条件与工商变更脱钩
+      - 税负承担约定不明
+    basis:
+      - 公司法第84条
+
+  - name: 其他股东同意与优先购买权条款
+    required: true
+    keywords: [优先购买权, 放弃优先购买权, 股东会决议, 其他股东同意]
+    elements:
+      - 其他股东放弃优先购买权的书面文件
+      - 通知与答复期限的合规性
+      - 章程特别规定的处理
+      - 交割前提条件
+    issues:
+      - 仅口头确认放弃优先购买权
+      - 未核查章程的特别限制
+    basis:
+      - 公司法第84条
+
+  - name: 陈述与保证条款
+    required: true
+    keywords: [陈述与保证, 声明与保证, 或有负债, 未披露]
+    elements:
+      - 公司与股权的合法存续
+      - 财务报表的真实性
+      - 重大合同与诉讼披露
+      - 违反保证的赔偿机制
+    issues:
+      - 保证范围过窄
+      - 未约定违反保证的救济
+    basis:
+      - 公司法第84条
+
+  - name: 过渡期与交割条款
+    required: true
+    keywords: [交割, 过渡期, 工商变更, 变更登记]
+    elements:
+      - 评估基准日与交割日
+      - 过渡期损益归属
+      - 工商变更的办理义务与时限
+      - 交割不能的解除与返还
+    issues:
+      - 未约定交割先决条件
+      - 未约定变更登记失败的处理
+    basis:
+      - 公司法第84条

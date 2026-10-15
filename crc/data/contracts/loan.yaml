@@ -1,0 +1,111 @@
+type: loan
+label: 借款合同
+category: 金融类
+summary: 借款人向贷款人借款，到期返还借款并支付利息。
+
+legal_basis:
+  - 民法典第667条
+  - 民法典第680条
+
+checks:
+  macro:
+    - id: loan-purpose
+      question: 借款用途是否合法？是否可能被用于违法活动？
+      risk: fatal
+      guidance: 明知借款用于违法活动仍出借，会影响合同效力与债权保护，用途应写明并保留监督手段。
+      basis:
+        - 民法典第667条
+
+    - id: loan-usury
+      question: 约定利率是否违反国家有关规定？
+      risk: fatal
+      guidance: 禁止高利放贷，利率不得违反国家有关规定；超过法定上限的部分不受保护。
+      basis:
+        - 民法典第680条
+
+  meso:
+    - id: loan-interest-clear
+      question: 是否约定了利息？约定是否明确？
+      risk: major
+      guidance: 未约定利息视为没有利息；约定不明的，非自然人之间按交易方式、习惯与市场利率确定，自然人之间视为无息。
+      basis:
+        - 民法典第680条
+
+    - id: loan-nature
+      question: 是否名为投资、合作实为借贷？
+      risk: major
+      guidance: 约定固定回报、不参与经营、到期返本的安排，很可能被认定为借贷而非投资，进而适用利率规则。
+      basis:
+        - 合同编通则解释第15条
+
+  micro:
+    - id: loan-repay
+      question: 还款期限与还款方式是否明确？提前还款如何处理？
+      risk: major
+      guidance: 到期未约定宽限与逾期责任的，债权人主张违约成本会更高，宜写明逾期利息与催收费用。
+      basis:
+        - 民法典第667条
+
+    - id: loan-security
+      question: 是否设置担保？担保方式与办理登记的安排是否写明？
+      risk: major
+      guidance: 抵押、质押需依法办理登记才能对抗第三人，保证则要核查保证人的代偿能力。
+      basis:
+        - 民法典第667条
+
+clauses:
+  - name: 借款金额与用途条款
+    required: true
+    keywords: [借款金额, 借款用途, 借款本金, 出借]
+    elements:
+      - 本金数额与币种
+      - 借款用途
+      - 款项交付方式与凭证
+      - 挪用借款的后果
+    issues:
+      - 未约定交付凭证与到账确认
+      - 用途写「经营周转」等模糊表述
+    basis:
+      - 民法典第667条
+
+  - name: 利率与利息条款
+    required: true
+    keywords: [利率, 利息, 年利率, 计息]
+    elements:
+      - 利率标准与计息方式
+      - 计息起止日
+      - 是否复利
+      - 利率上限的合法性
+    issues:
+      - 只写月息未换算年利率
+      - 约定复利但未明确基数
+    basis:
+      - 民法典第680条
+
+  - name: 还款期限与方式条款
+    required: true
+    keywords: [还款期限, 还款方式, 到期, 分期还款]
+    elements:
+      - 还款日与还款方式
+      - 分期还款的期数金额
+      - 提前还款的条件与费用
+      - 逾期利息与催收费用
+    issues:
+      - 未约定逾期利息
+      - 提前还款无规则
+    basis:
+      - 民法典第667条
+
+  - name: 担保条款
+    required: false
+    keywords: [担保, 保证人, 抵押, 质押, 连带责任]
+    elements:
+      - 担保方式与担保范围
+      - 保证期间
+      - 抵质押物的登记安排
+      - 担保人的追偿权
+    issues:
+      - 未约定保证期间
+      - 未约定登记办理时限
+    basis:
+      - 民法典第667条

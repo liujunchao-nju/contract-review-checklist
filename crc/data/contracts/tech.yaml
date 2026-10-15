@@ -1,0 +1,127 @@
+type: tech
+label: 技术开发合同
+category: 技术类
+summary: 就新技术、新产品、新工艺等研究开发事项订立的委托或合作开发合同。
+
+legal_basis:
+  - 民法典第843条
+  - 民法典第851条
+  - 民法典第859条
+
+checks:
+  macro:
+    - id: tech-nature
+      question: 标的是否属于技术开发，而非一般承揽或采购？是否采用了书面形式？
+      risk: major
+      guidance: 技术开发合同应当采用书面形式；若实为采购现成技术，应按技术转让或许可处理，定性和税务口径都不同。
+      basis:
+        - 民法典第843条
+        - 民法典第851条
+
+  meso:
+    - id: tech-ownership
+      question: 开发成果的申请专利权利与使用权归属是否写明？
+      risk: fatal
+      guidance: 委托开发完成的发明创造，除法律另有规定或当事人另有约定外，申请专利的权利属于研究开发人；委托人可依法实施。归属不写明，委托人往往只拿到实施权。
+      basis:
+        - 民法典第859条
+
+    - id: tech-failure
+      question: 技术风险与开发失败的责任如何分配？
+      risk: major
+      guidance: 研究开发本身具有不确定性，应就阶段性成果、失败认定标准与费用分担达成一致，避免以「未达目标」简单归责。
+      basis:
+        - 民法典第851条
+
+  micro:
+    - id: tech-milestone
+      question: 是否设置里程碑与阶段验收？付款是否与阶段成果挂钩？
+      risk: major
+      guidance: 长周期研发宜按阶段设置交付物与验收点，把付款节点与阶段成果绑定。
+      basis:
+        - 民法典第851条
+
+    - id: tech-background
+      question: 双方投入的背景技术、数据与资料的使用权限是否写明？
+      risk: major
+      guidance: 背景知识产权与前景成果应区分处理，投入资料的范围与用途限制要写清，防止后续越界使用。
+      basis:
+        - 民法典第859条
+
+    - id: tech-ip-infringe
+      question: 若成果侵犯第三方权利，责任由哪一方承担？
+      risk: major
+      guidance: 开发方对自有技术的权利瑕疵应作保证，委托人应及时提供技术资料，双方过错各自对应责任。
+      basis:
+        - 民法典第509条
+
+clauses:
+  - name: 研发内容与目标条款
+    required: true
+    keywords: [研发内容, 技术目标, 开发内容, 技术指标]
+    elements:
+      - 技术目标与性能指标
+      - 交付物清单
+      - 技术路线或方案
+      - 需求变更的处理程序
+    issues:
+      - 目标指标不可验证
+      - 需求变更无程序
+    basis:
+      - 民法典第851条
+
+  - name: 交付与验收条款
+    required: true
+    keywords: [交付, 验收, 测试, 阶段成果]
+    elements:
+      - 交付形式（文档、代码、样机）
+      - 验收标准与测试方法
+      - 验收期限与不通过的处理
+      - 视为验收合格的条件
+    issues:
+      - 验收标准主观
+      - 未约定不通过后的返工安排
+    basis:
+      - 民法典第851条
+
+  - name: 开发费用与支付条款
+    required: true
+    keywords: [开发费用, 研究开发经费, 报酬, 付款进度]
+    elements:
+      - 费用构成与总额
+      - 与里程碑绑定的付款节点
+      - 费用超支的处理
+      - 发票与税费
+    issues:
+      - 付款与阶段成果脱钩
+      - 未约定超支分担
+    basis:
+      - 民法典第646条
+
+  - name: 成果归属与知识产权条款
+    required: true
+    keywords: [成果归属, 知识产权, 专利申请, 著作权, 技术秘密]
+    elements:
+      - 背景知识产权的范围与授权
+      - 前景成果的归属
+      - 申请专利的权利分配
+      - 技术秘密的保护与使用限制
+    issues:
+      - 只写成果归委托方但未约定对价
+      - 未区分背景与前景
+    basis:
+      - 民法典第859条
+
+  - name: 保密与数据条款
+    required: true
+    keywords: [保密, 技术资料, 数据, 技术秘密]
+    elements:
+      - 保密信息范围
+      - 保密期限
+      - 技术资料的返还或销毁
+      - 数据使用与留存
+    issues:
+      - 保密期限与合同期限相同
+      - 未约定资料返还
+    basis:
+      - 民法典第509条
