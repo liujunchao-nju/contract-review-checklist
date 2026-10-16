@@ -41,7 +41,7 @@ jobs:
           # audit 检出缺失条款时按设计返回 1（示例合同刻意留了缺口），此处只验证命令可运行
           python -m crc audit --type sales --file examples/contract_sample.md || true
           python -m crc audit --type sales --file examples/contract_sample.md --json | head -5
-          python -m crc audit --type sales --file examples/contract_sample.md --format html > /tmp/au.html
+          python -m crc audit --type sales --file examples/contract_sample.md --format html > /tmp/au.html || true
           python -m crc audit --type lease --file examples/contract_sample.md --party 乙方 --no-bench || true
 
       - name: HTML 产物不得引用外部资源
